@@ -13,7 +13,7 @@ services:
       - dev
 
   web:
-    build: BackEnd/php
+    build: back_end/php
     container_name: www_docker_symfony
     ports:
       - "6001:80"
