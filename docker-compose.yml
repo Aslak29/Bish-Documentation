@@ -1,0 +1,52 @@
+version: "3.8"
+services:
+
+  db_mysql:
+    image: mysql
+    container_name: db_mysql_docker_symfony
+    ports:
+      - "6000:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    restart: always
+    networks:
+      - dev
+
+  web:
+    build: BackEnd/php
+    container_name: www_docker_symfony
+    ports:
+      - "6001:80"
+    volumes:
+      - ./BackEnd/php/vhosts:/etc/apache2/sites-enabled
+      - ./:/var/www
+    depends_on:
+      - db_mysql
+    restart: always
+    networks:
+      - dev
+
+  phpMyAdmin:
+    image: phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db_mysql
+      PMA_PORT: 3306
+    depends_on:
+      - db_mysql
+    networks:
+      - dev
+
+  front_end:
+    build: front_end
+    container_name: react_app
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - dev
+
+networks:
+  dev:
+
